@@ -21,15 +21,15 @@ def send_msg():
 
 def main():
 	print(time.strftime(STRF), "MensaBot started")
-	while (r := requests.get(TARGET_URL)).status_code != 200:
-		print(time.strftime(STRF), "Failed to fetch: ", r.reason)
-		time.sleep(5)
-	old = '\n'.join(l.strip() for l in r.text.splitlines() if l.strip())
+	old = None
 	while True:
 		while (r := requests.get(TARGET_URL)).status_code != 200:
 			print(time.strftime(STRF), "Failed to fetch: ", r.reason)
 			time.sleep(5)
 		new = '\n'.join(l.strip() for l in r.text.splitlines() if l.strip())
+		if old is None:
+			old = new
+			continue
 		if new != old:
 			print(time.strftime(STRF), 'Updated')
 			send_msg()
